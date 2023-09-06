@@ -4,9 +4,28 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { faArrowUpFromBracket, faCircleNotch, faXmark, faCheck, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
 import { environment as env } from 'src/environments/environment';
+import { DropdownItem } from '../drop-down/drop-down.component';
 
 type Fields = {
   file: File|undefined|null;
+  dropdown?: DropdownItem
+}
+
+type CsvWarning = {
+  dataType: string,
+  ref: string,
+  message: string
+}
+
+type CsvImportResponse = {
+  error: boolean,
+  error_msg: string,
+  warnings: CsvWarning[]
+}
+
+type DropdownData = {
+  label: string,
+  dropdownItems: DropdownItem[]
 }
 
 @Component({
@@ -23,9 +42,12 @@ export class FileUploadComponent {
   faXmark = faXmark
   faPlus = faPlus
   faCheck = faCheck
-  @Input() url = ''
+
   filename = ''
+  @Input() dropdownData?: DropdownData
   uploadForm!: FormGroup
+
+  @Input() url = ''
   @Input() title = ''
   @ViewChild('file') fileInput!: HTMLInputElement
 
@@ -43,12 +65,13 @@ export class FileUploadComponent {
   resetInput(event: Event) {
     event.preventDefault()
     this.fileInput.value = ''
+    this.filename = ''
     this.state = 'waiting'
   }
 
   dragOverHandler(event: DragEvent) {
     event.preventDefault()
-    if (this.state != 'waiting')
+    if (!['waiting', 'success'].includes(this.state))
       return
 
     this.state = 'drag-over'
@@ -64,7 +87,8 @@ export class FileUploadComponent {
 
   dropHandler(event: DragEvent) {
     event.preventDefault()
-    if (this.state != 'waiting' && this.state != 'drag-over') {
+    // if (this.state != 'waiting' && this.state != 'drag-over') {
+    if (!['waiting', 'drag-over'].includes(this.state)) {
       return
     }
 
@@ -105,11 +129,14 @@ export class FileUploadComponent {
     const formData = new FormData()
     formData.append('file', this.uploadForm.get('file')!.value)
 
-    // Por implementar
-    this.http.post(env.baseUrl + this.url, formData)
+    this.http.post<CsvImportResponse>(env.baseUrl + this.url, formData)
       .subscribe(response => {
         console.log(response)
-        this.filename = ''
+        if (response.error) {
+          this.state = 'failed'
+        } else {
+          this.state = 'completed'
+        }
       })
   }
 

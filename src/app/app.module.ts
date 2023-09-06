@@ -7,12 +7,14 @@ import { FileUploadComponent } from './file-upload/file-upload.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginWarningComponent } from './login-warning/login-warning.component';
+import { DropDownComponent } from './drop-down/drop-down.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FileUploadComponent,
     LoginWarningComponent,
+    DropDownComponent,
   ],
   imports: [
     BrowserModule,

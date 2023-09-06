@@ -7,6 +7,7 @@ label {
   border: 2px dashed currentColor;
   border-radius: 10px;
   font-weight: bold;
+  transition: color 200ms ease;
 
   &.waiting, &.drag-over {
     cursor: pointer;
@@ -22,16 +23,24 @@ label {
   }
   &.failed {
     color: crimson;
+  }
+  &.completed {
+    color: forestgreen;
+  }
+  &.failed, &.completed {
     &:hover span:first-of-type {
       transform: scale(1.6);
       cursor: pointer;
     }
   }
-  &.completed {
-    color: forestgreen;
-  }
 
   padding: 2rem;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 p {
@@ -47,5 +56,5 @@ p {
 }
 
 h1 {
-  margin-top: 0;
+  margin: 0;
 }

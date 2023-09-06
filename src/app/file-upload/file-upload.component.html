@@ -1,5 +1,10 @@
 <form [formGroup]="uploadForm" (ngSubmit)="submit()">
-  <h1>{{title}}</h1>
+  <span class="head">
+    <h1>{{title}}</h1>
+    <app-drop-down *ngIf="dropdownData"
+      [label]="dropdownData!.label" [elements]="dropdownData!.dropdownItems"
+    />
+  </span>
   <label for="file" class="{{state}}"
     (dragover)="dragOverHandler($event)"
     (dragleave)="dragLeaveHandler($event)"
@@ -11,15 +16,15 @@
       </ng-container>
       <ng-container *ngSwitchCase="'drag-over'">
         <span ><fa-icon [icon]="faPlus" /></span>
-        <span>Subir archivo CSV</span>
+        <span>Suelta para subir</span>
       </ng-container>
       <ng-container *ngSwitchCase="'uploading'">
         <span class="rotate"><fa-icon [icon]="faCircleNotch" /></span>
         <span>Procesando {{filename}}...</span>
       </ng-container>
       <ng-container *ngSwitchCase="'completed'">
-        <span><fa-icon [icon]="faCheck" /></span>
-        <span>{{filename}} subido correctamente</span>
+        <span (click)="resetInput($event)"><fa-icon [icon]="faCheck" /></span>
+        <span>{{filename}} importado correctamente</span>
       </ng-container>
       <ng-container *ngSwitchCase="'failed'">
         <span (click)="resetInput($event)"><fa-icon [icon]="faXmark" /></span>

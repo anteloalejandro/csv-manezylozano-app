@@ -1,10 +1,9 @@
 <div class="container" *ngIf="ignoreLogin || loginService.getResponse()?.error == false; else elseBlock">
   <div class="forms">
     <!-- <app-file-upload [title]="'Conjuntos'" [url]="'/conjuntos'"/> -->
-    <!-- <app-file-upload [title]="'Despieces'" [url]="'/despieces'" /> -->
-    <app-file-upload [title]="'Piezas'" [url]="'/piezas/'" />
+    <app-file-upload [title]="'Despieces'" [url]="'/despieces/'" [inputName]="'despieces-csv'" />
+    <app-file-upload [title]="'Piezas'" [url]="'/piezas/'" [inputName]="'piezas-csv'" />
   </div>
-  <!-- <code>URL: {{url}}</code> -->
 </div>
 <ng-template #elseBlock>
   <app-login-warning />

@@ -1,14 +1,11 @@
-import { HttpClient, HttpEventType } from '@angular/common/http';
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, Input, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { faArrowUpFromBracket, faCircleNotch, faXmark, faCheck, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { Observable } from 'rxjs';
 import { environment as env } from 'src/environments/environment';
-import { DropdownItem } from '../drop-down/drop-down.component';
 
 type Fields = {
   file: File|undefined|null;
-  dropdown?: DropdownItem
 }
 
 type CsvWarning = {
@@ -21,11 +18,6 @@ type CsvImportResponse = {
   error: boolean,
   error_msg: string,
   warnings: CsvWarning[]
-}
-
-type DropdownData = {
-  label: string,
-  dropdownItems: DropdownItem[]
 }
 
 @Component({
@@ -44,11 +36,11 @@ export class FileUploadComponent {
   faCheck = faCheck
 
   filename = ''
-  @Input() dropdownData?: DropdownData
   uploadForm!: FormGroup
 
   @Input() url = ''
   @Input() title = ''
+  @Input() inputName = 'file'
   @ViewChild('file') fileInput!: HTMLInputElement
 
   constructor(
@@ -127,7 +119,7 @@ export class FileUploadComponent {
 
   submit() {
     const formData = new FormData()
-    formData.append('file', this.uploadForm.get('file')!.value)
+    formData.append(this.inputName, this.uploadForm.get('file')!.value)
 
     this.http.post<CsvImportResponse>(env.baseUrl + this.url, formData)
       .subscribe(response => {

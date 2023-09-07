@@ -1,11 +1,8 @@
 <form [formGroup]="uploadForm" (ngSubmit)="submit()">
   <span class="head">
     <h1>{{title}}</h1>
-    <app-drop-down *ngIf="dropdownData"
-      [label]="dropdownData!.label" [elements]="dropdownData!.dropdownItems"
-    />
   </span>
-  <label for="file" class="{{state}}"
+  <label for="{{inputName}}" class="{{state}}"
     (dragover)="dragOverHandler($event)"
     (dragleave)="dragLeaveHandler($event)"
     (drop)="dropHandler($event)">
@@ -31,7 +28,7 @@
         <span>Error subiendo {{filename}}</span>
       </ng-container>
     </p>
-    <input type="file" style="display: none;" #file id="file" name="file"
+    <input type="file" style="display: none;" #file id="{{inputName}}" name="{{inputName}}"
       (change)="inputHandler($event)" [multiple]="false"
       [disabled]="state != 'waiting' && state != 'drag-over'"
       [accept]="'.csv'">

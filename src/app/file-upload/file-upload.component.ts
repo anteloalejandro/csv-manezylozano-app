@@ -1,23 +1,14 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { faArrowUpFromBracket, faCircleNotch, faXmark, faCheck, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { catchError, Observable, throwError } from 'rxjs';
 import { environment as env } from 'src/environments/environment';
+import { CsvWarning, CsvImportResponse } from '../CsvImportResponse';
+import { ErrorLogService } from '../error-log.service';
 
 type Fields = {
   file: File|undefined|null;
-}
-
-type CsvWarning = {
-  dataType: string,
-  ref: string,
-  message: string
-}
-
-type CsvImportResponse = {
-  error: boolean,
-  error_msg: string,
-  warnings: CsvWarning[]
 }
 
 @Component({
@@ -45,7 +36,8 @@ export class FileUploadComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private http: HttpClient
+    private http: HttpClient,
+    private log: ErrorLogService
   ) { }
 
   ngOnInit() {
@@ -79,7 +71,6 @@ export class FileUploadComponent {
 
   dropHandler(event: DragEvent) {
     event.preventDefault()
-    // if (this.state != 'waiting' && this.state != 'drag-over') {
     if (!['waiting', 'drag-over'].includes(this.state)) {
       return
     }
@@ -122,14 +113,24 @@ export class FileUploadComponent {
     formData.append(this.inputName, this.uploadForm.get('file')!.value)
 
     this.http.post<CsvImportResponse>(env.baseUrl + this.url, formData)
+      .pipe(catchError(this.handleError))
       .subscribe(response => {
         console.log(response)
         if (response.error) {
           this.state = 'failed'
+          this.log.pushCsvImportResponse(response)
         } else {
           this.state = 'completed'
         }
       })
+  }
+
+  private handleError = (error: HttpErrorResponse) => {
+    const msg = 'Error fatal: ' + error.message
+    console.log(msg)
+    this.state = 'failed'
+    this.log.pushError(msg)
+    return throwError(() => new Error(msg))
   }
 
 }

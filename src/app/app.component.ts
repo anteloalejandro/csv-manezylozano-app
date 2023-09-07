@@ -13,5 +13,8 @@ export class AppComponent {
   url = env.baseUrl
   ignoreLogin = !env.production
 
-  constructor (public loginService: LoginService) { }
+  constructor (
+    public loginService: LoginService
+  ) { }
+
 }

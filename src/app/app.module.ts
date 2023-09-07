@@ -7,12 +7,14 @@ import { FileUploadComponent } from './file-upload/file-upload.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginWarningComponent } from './login-warning/login-warning.component';
+import { LogListComponent } from './log-list/log-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FileUploadComponent,
     LoginWarningComponent,
+    LogListComponent,
   ],
   imports: [
     BrowserModule,

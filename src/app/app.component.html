@@ -1,9 +1,19 @@
 <div class="container" *ngIf="ignoreLogin || loginService.getResponse()?.error == false; else elseBlock">
   <div class="forms">
     <!-- <app-file-upload [title]="'Conjuntos'" [url]="'/conjuntos'"/> -->
-    <app-file-upload [title]="'Despieces'" [url]="'/despieces/'" [inputName]="'despieces-csv'" />
     <app-file-upload [title]="'Piezas'" [url]="'/piezas/'" [inputName]="'piezas-csv'" />
+    <app-file-upload [title]="'Despieces'" [url]="'/despieces/'" [inputName]="'despieces-csv'" />
   </div>
+
+  <!-- <div class="errors">
+    <p *ngIf="errors.getErrorMsg() as err_msg"> {{err_msg}} </p>
+    <ul *ngIf="errors.getWarnings().length > 0">
+      <li *ngFor="let warn of errors.getWarnings()"> {{warn}} </li>
+    </ul>
+  </div> -->
+  <app-log-list/>
+
+
 </div>
 <ng-template #elseBlock>
   <app-login-warning />

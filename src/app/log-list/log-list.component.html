@@ -1,0 +1,18 @@
+<div class="logs"
+  *ngIf="log.getWarningLog().length > 0 || log.getErrorLog().length > 0">
+  <h1>Errores y Avisos</h1>
+  <div class="logs-container">
+    <ul class="errors">
+      <li *ngFor="let err of log.getErrorLog(); let i = index;">
+        <span>{{err}}</span>
+        <span class="close" (click)="deleteError(i)"><fa-icon [icon]="faXmark"/></span>
+      </li>
+    </ul>
+    <ul class="warnings">
+      <li *ngFor="let warn of log.getWarningLog(); let i = index;">
+        <span>{{warn}}</span>
+        <span class="close" (click)="deleteWarning(i)"><fa-icon [icon]="faXmark"/></span>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -4,4 +4,12 @@
 
 ## Build
 
-Asumiendo que la carpeta resultante va a estar localizada en `/importar/csv`, ejecutar `ng build -c production --base-ref="/importar/csv"`.
+Asumiendo que la carpeta resultante va a estar localizada en `/importar/csv`, ejecutar:
+
+```bash
+ng build -c production --base-ref="/importar/csv"
+```
+
+## API
+
+Hace uso de una API que puedes encontrar [aquí](https://github.com/anteloalejandro/csv-manezylozano-api).

@@ -1,6 +1,7 @@
 import { environment as devEnv } from "./environment.development";
 export const environment = {
   production: true,
-  baseUrl: devEnv.baseUrl
+  baseUrl: 'https://manezylozano.sgdocs.com/importar'
+  // baseUrl: devEnv.baseUrl
   // baseUrl: 'http://tienda.manezylozano.com/importar'
 };

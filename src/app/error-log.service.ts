@@ -10,23 +10,25 @@ export class ErrorLogService {
   private warningLog: string[] = []
 
   constructor() {
-    this.errorLog.push('error1', 'error2', 'error3')
-    this.warningLog.push('warning1', 'warning2', 'warning3')
+    // this.errorLog.push('error1', 'error2', 'error3')
+    // this.warningLog.push('warning1', 'warning2', 'warning3')
   }
 
   pushCsvImportResponse(response: CsvImportResponse) {
-    this.errorLog.push(response.error_msg)
+    if (response.error_msg != '') {
+      this.errorLog.push(response.error_msg)
+    }
     this.warningLog.push(...response.warnings.map(
-      w => `${w.dataType} => ${w.ref}: ${w.message}`
+      w => `${w.message}`
     ))
   }
 
-  pushError(text: string) {
-    this.errorLog.push(text)
+  pushError(...errors: string[]) {
+    this.errorLog.push(...errors)
   }
 
-  pushWarning(text: string) {
-    this.warningLog.push(text)
+  pushWarning(...warnings: string[]) {
+    this.warningLog.push(...warnings)
   }
 
   getErrorLog() {

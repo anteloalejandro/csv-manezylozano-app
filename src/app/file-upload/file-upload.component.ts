@@ -118,10 +118,10 @@ export class FileUploadComponent {
         console.log(response)
         if (response.error) {
           this.state = 'failed'
-          this.log.pushCsvImportResponse(response)
         } else {
           this.state = 'completed'
         }
+        this.log.pushCsvImportResponse(response)
       })
   }
 

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 import { environment as env } from 'src/environments/environment';
 import { LoginService } from '../login.service';
 
@@ -9,6 +10,7 @@ import { LoginService } from '../login.service';
 })
 export class LoginWarningComponent {
   // show = env.production
+  faCircleNotch = faCircleNotch
   show = true
   constructor(public loginservice: LoginService) {}
 }

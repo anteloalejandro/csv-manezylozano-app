@@ -1,5 +1,9 @@
 <div id="login-warning">
-  <a href="{{loginservice.getResponse()?.redirect_link}}">
+  <a *ngIf="loginservice.getResponse(); else elseBlock"
+    href="{{loginservice.getResponse()?.redirect_link}}">
     Iniciar sesión
   </a>
+  <ng-template #elseBlock >
+    <span class="rotate"><fa-icon [icon]="faCircleNotch"/></span>
+  </ng-template>
 </div>

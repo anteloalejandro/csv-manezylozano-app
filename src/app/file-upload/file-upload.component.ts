@@ -127,7 +127,7 @@ export class FileUploadComponent {
 
   private handleError = (error: HttpErrorResponse) => {
     const msg = 'Error fatal: ' + error.message
-    console.log(msg)
+    console.log(error)
     this.state = 'failed'
     this.log.pushError(msg)
     return throwError(() => new Error(msg))

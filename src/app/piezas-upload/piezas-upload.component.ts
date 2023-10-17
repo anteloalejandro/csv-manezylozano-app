@@ -1,8 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { faArrowUpFromBracket, faCircleNotch, faXmark, faCheck, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, firstValueFrom, Observable, throwError } from 'rxjs';
 import { environment as env } from 'src/environments/environment';
 import { CsvWarning, CsvImportResponse } from '../CsvImportResponse';
 import { ErrorLogService } from '../error-log.service';
@@ -35,24 +34,15 @@ export class PiezasUploadComponent {
 
   filename = ''
 
-  uploadForm!: FormGroup
-
   @Input() url = ''
   @Input() title = ''
   @Input() inputName = 'file'
   @ViewChild('file') fileInput!: HTMLInputElement
 
   constructor(
-    private formBuilder: FormBuilder,
     private http: HttpClient,
     private log: ErrorLogService
   ) { }
-
-  ngOnInit() {
-    this.uploadForm = this.formBuilder.group<Fields>({
-      data: null
-    })
-  }
 
   resetInput(event: Event) {
     event.preventDefault()
@@ -108,13 +98,12 @@ export class PiezasUploadComponent {
   }
 
   fileSelect(file: File) {
-    console.log('fileSelect');
     this.state = 'uploading'
-    this.processData(file, this.uploadData);
+    this.filename = file.name
+    this.processData(file);
   }
 
   csvToJson(csv: string) {
-    console.log('csvToJson');
     const lines = csv.split("\n")
     const result: FieldData[] = []
 
@@ -135,42 +124,50 @@ export class PiezasUploadComponent {
     return result;
   }
 
-  async processData(file: File, callback: (chunk: FieldData[]) => Promise<any>) {
-    console.log('processData');
-    const data = this.csvToJson(await file.text()); // get the data;
+  async uploadData(data: FieldData[]) {
+    return this.submit(data)
+  }
+
+  async processData(file: File) {
+    const data = this.csvToJson(await file.text());
     const chunk_size = 100;
+    const promises: Promise<any>[] = [];
     for (let i = 0; i < data.length; i+=chunk_size) {
       const chunk = data.slice(i, i + chunk_size);
-      await callback(chunk);
+      const newPromise = this.uploadData(chunk)
+        .then(response => {
+          console.log(response)
+          if (response.error) {
+            this.state = 'failed'
+            this.log.pushError(response.error_msg);
+          }
+          this.log.pushCsvImportResponse(response)
+        }
+      );
+      promises.push(newPromise);
     }
+
+    await Promise.all(promises);
+
+    if (this.state != 'failed')
+      this.state = 'completed'
   }
 
-  async uploadData(data: FieldData[]) {
-    console.log('uploadData');
-    const uploadForm = this.formBuilder.group<Fields>({
-      data: data
-    });
-    console.log('uploadData');
-    this.submit(uploadForm)
-  }
-
-  submit(uploadForm: FormGroup) {
-    console.log('submit');
-    const formData = new FormData()
-    formData.append(this.inputName, uploadForm.get('data')!.value)
-
-    this.http.post<CsvImportResponse>(env.baseUrl + this.url, formData)
+  submit(data: FieldData[]) {
+    const request = this.http.post<CsvImportResponse>(env.baseUrl + this.url, data)
       .pipe(catchError(this.handleError))
-      .subscribe(response => {
+
+    return firstValueFrom(request);
+      /* .subscribe(response => {
         console.log(response)
         if (response.error) {
           this.state = 'failed'
-        } else {
-          this.state = 'completed'
+          this.log.pushError(response.error_msg);
         }
         this.log.pushCsvImportResponse(response)
-      })
+      }) */
   }
+
 
   private handleError = (error: HttpErrorResponse) => {
     const msg = 'Error fatal: ' + error.message

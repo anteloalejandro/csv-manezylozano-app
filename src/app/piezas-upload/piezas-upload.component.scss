@@ -1,0 +1,60 @@
+label {
+  display: grid;
+  place-content: center;
+  width: 400px;
+  height: 100px;
+  color: grey;
+  border: 2px dashed currentColor;
+  border-radius: 10px;
+  font-weight: bold;
+  transition: color 200ms ease;
+
+  &.waiting, &.drag-over {
+    cursor: pointer;
+  }
+
+  &.waiting fa-icon {
+    color: cornflowerblue;
+  }
+
+  &.drag-over {
+    color: cornflowerblue;
+    font-size: 1.2em;
+  }
+  &.failed {
+    color: crimson;
+  }
+  &.completed {
+    color: forestgreen;
+  }
+  &.failed, &.completed {
+    &:hover span:first-of-type {
+      transform: scale(1.6);
+      cursor: pointer;
+    }
+  }
+
+  padding: 2rem;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+p {
+  display: flex;
+  gap: 1rem;
+
+  transition: font-size 200ms ease;
+
+  & span:first-child {
+    display: flex;
+    align-items: center;
+  }
+}
+
+h1 {
+  margin: 0;
+}

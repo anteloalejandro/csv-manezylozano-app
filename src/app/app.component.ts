@@ -12,6 +12,7 @@ export class AppComponent {
   title = 'csv';
   url = env.baseUrl
   ignoreLogin = !env.production
+  oldForm = false;
 
   constructor (
     public loginService: LoginService

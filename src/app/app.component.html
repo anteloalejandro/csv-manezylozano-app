@@ -1,7 +1,20 @@
 <div class="container" *ngIf="ignoreLogin || loginService.getResponse()?.error == false; else elseBlock">
   <div class="forms">
     <!-- <app-file-upload [title]="'Conjuntos'" [url]="'/conjuntos'"/> -->
-    <app-file-upload [title]="'Piezas'" [url]="'/piezas/'" [inputName]="'piezas-csv'" />
+    <div class="piezas-container" *ngIf="!oldForm">
+      <p>
+        Si tienes problemas subiendo las piezas, prueba con
+        <a (click)="oldForm = !oldForm"> la antigua versión de este formulario</a>.
+      </p>
+      <app-piezas-upload [title]="'Piezas'" [url]="'/piezas/quick-upload'" [inputName]="'piezas-quick'" />
+    </div>
+    <div class="piezas-container" *ngIf="oldForm">
+      <p>
+        Esta es la versión antigua del formulario, que tiene límitada la capacidad para subir archivos a unos 500, aproximadamente.
+        <a (click)="oldForm = !oldForm">Accede aquí a la última versión</a>.
+      </p>
+      <app-file-upload [title]="'Piezas'" [url]="'/piezas/'" [inputName]="'piezas-csv'" />
+    </div>
     <app-file-upload [title]="'Despieces'" [url]="'/despieces/'" [inputName]="'despieces-csv'" />
   </div>
 

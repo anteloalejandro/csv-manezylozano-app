@@ -11,3 +11,17 @@
     gap: 2rem;
   }
 }
+
+.piezas-container {
+  width: min-content;
+  p {
+    font-size: .8rem;
+    a {
+      color: lightblue;
+      cursor: pointer;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

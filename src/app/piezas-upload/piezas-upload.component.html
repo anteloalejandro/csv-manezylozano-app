@@ -1,0 +1,36 @@
+<form [formGroup]="uploadForm">
+  <span class="head">
+    <h1>{{title}}</h1>
+  </span>
+  <label for="{{inputName}}" class="{{state}}"
+    (dragover)="dragOverHandler($event)"
+    (dragleave)="dragLeaveHandler($event)"
+    (drop)="dropHandler($event)">
+    <p [ngSwitch]="state">
+      <ng-container *ngSwitchCase="'waiting'">
+        <span><fa-icon [icon]="faArrowUpFromBracket" /></span>
+        <span>Subir archivo CSV</span>
+      </ng-container>
+      <ng-container *ngSwitchCase="'drag-over'">
+        <span ><fa-icon [icon]="faPlus" /></span>
+        <span>Suelta para subir</span>
+      </ng-container>
+      <ng-container *ngSwitchCase="'uploading'">
+        <span class="rotate"><fa-icon [icon]="faCircleNotch" /></span>
+        <span>Procesando {{filename}}...</span>
+      </ng-container>
+      <ng-container *ngSwitchCase="'completed'">
+        <span (click)="resetInput($event)"><fa-icon [icon]="faCheck" /></span>
+        <span>{{filename}} importado correctamente</span>
+      </ng-container>
+      <ng-container *ngSwitchCase="'failed'">
+        <span (click)="resetInput($event)"><fa-icon [icon]="faXmark" /></span>
+        <span>Error subiendo {{filename}}</span>
+      </ng-container>
+    </p>
+    <input type="file" style="display: none;" #file id="{{inputName}}" name="{{inputName}}"
+      (change)="inputHandler($event)" [multiple]="false"
+      [disabled]="state != 'waiting' && state != 'drag-over'"
+      [accept]="'.csv'">
+  </label>
+</form>
